@@ -11,6 +11,8 @@ void CreateBoard(Board &board, SDL_Renderer *renderer);
 void ComputeCells(Board &board, SDL_Renderer *renderer);
 
 Cell *Get_Cell(Board &board, double x, double y);
+void OpenEmptyCells(Board &board, Cell *cell);
+void GameOver(Board &board);
 
 class Board {
 public:

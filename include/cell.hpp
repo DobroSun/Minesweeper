@@ -14,11 +14,11 @@ class Cell {
 public:
     Cell();
     ~Cell();
-    bool check_cursor(int x, int y);
 
     size_t bombs_around;
     bool is_bomb;
     bool is_hidden;
+    bool is_clickable;
     SDL_Texture *texture;
     SDL_Texture *default_texture;
     SDL_Rect SrcR;

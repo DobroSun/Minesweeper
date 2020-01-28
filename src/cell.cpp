@@ -35,21 +35,10 @@ Cell::Cell() {
     texture = nullptr;
     default_texture = nullptr;
     bombs_around = 0;
+    is_clickable = true;
 }
 
 Cell::~Cell() {
     SDL_DestroyTexture(texture);
     SDL_DestroyTexture(default_texture);
-}
-
-bool Cell::check_cursor(int x, int y) {
-    int cell_x = DestR.x;
-    int cell_y = DestR.y;
-
-    if(cell_x >= x && cell_x+CellSize < x) {
-        if(cell_y >= y && cell_y+CellSize < y) {
-            return true;
-        }
-    }
-    return false;
 }

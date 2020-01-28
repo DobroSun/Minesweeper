@@ -4,7 +4,6 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 
-
 int main() {
     bool is_running = true;
     Board board;
@@ -45,6 +44,7 @@ int main() {
                 SDL_RenderCopy(renderer, cell_texture, NULL, &cell.DestR);
             }
         }
+
         SDL_RenderPresent(renderer);
         SDL_RenderClear(renderer);
 
@@ -62,19 +62,21 @@ int main() {
                         default:
                             break;
                     }
-                case SDL_MOUSEMOTION:
-                    std::cout << event.motion.x << " " << event.motion.y << std::endl;
-
+                case SDL_MOUSEBUTTONDOWN:
                     Cell *cell = Get_Cell(board, event.motion.x, event.motion.y);
+                    if(!cell || !cell->is_clickable) break;
 
-                    if(!cell) break;
-                    else std::cout << cell->DestR.x << " " << cell->DestR.y << "WORKING!!!" << std::endl;
-
+                    cell->is_hidden = false;
+                    if(cell->is_bomb) {
+                        GameOver(board);
+                        break;
+                    } else if(cell->bombs_around == 0) {
+                        OpenEmptyCells(board, cell);
+                    }
                     break;
             }
         }
     }
-
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(win);
     SDL_Quit();

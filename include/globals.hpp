@@ -8,7 +8,7 @@ const int HEIGHT = 600;
 
 const int CellSize = 20;
 
-const int offset = 10;
+const int offset = 0;
 
 const int UpperBound = 200;
 const int LowerBound = HEIGHT - offset;

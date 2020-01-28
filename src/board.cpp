@@ -1,9 +1,12 @@
 #include "board.hpp"
 #include "utils.hpp"
 #include <iostream>
+#include <stack>
+#include <unordered_set>
 
-std::string default_path = assets_path+"0.png";
-std::array<std::string, 2> image_cellbomb {{ assets_path+"0.png", assets_path+"bomb.png" }};
+
+std::string default_path = assets_path+"facingDown.png";
+std::array<std::string, 2> image_cellbomb {{ assets_path+"factingDown.png", assets_path+"bomb.png" }};
 std::array<std::string, 9> image_numbers 
             {{ assets_path+"0.png",
                assets_path+"1.png", assets_path+"2.png",
@@ -23,7 +26,7 @@ void CreateBoard(Board &board, SDL_Renderer *renderer) {
             std::string path = image_cellbomb[random_num];
 
             cell.is_bomb = random_num;
-            cell.is_hidden = false;
+            cell.is_hidden = true;
 
             cell.default_texture = make_texture(renderer, default_path);
             cell.texture = make_texture(renderer, path);
@@ -46,6 +49,7 @@ void ComputeCells(Board &board, SDL_Renderer *renderer) {
             auto &cell = field[i][j];
 
             if(cell.is_bomb) {
+                cell.bombs_around = -1;
                 continue;
             }
             
@@ -54,16 +58,13 @@ void ComputeCells(Board &board, SDL_Renderer *renderer) {
                        {i, j-1},             {i, j+1},
                        {i+1, j-1}, {i+1, j}, {i+1, j+1},
                     }};
-            for(auto coords: cells_around) {
+            for(auto &coords: cells_around) {
                 int i_ind = std::get<0>(coords);
                 int j_ind = std::get<1>(coords);
 
                 if(cell_exists(i_ind, j_ind) && field[i_ind][j_ind].is_bomb) {
                     cell.bombs_around += 1;
                 }
-            }
-            if(!cell.bombs_around) {
-                continue;
             }
 
             std::string path = image_numbers[cell.bombs_around];
@@ -112,4 +113,53 @@ Cell *Get_Cell(Board &board, double x, double y) {
     if(res2 == -1) res2 = left-1;
 
     return &field[res2][res1];
+}
+
+void OpenEmptyCells(Board &board, Cell *cell) {
+    auto &field = board.field;
+    std::unordered_set<Cell *> visited;
+    std::stack<Cell *> stack;
+
+    stack.push(cell);
+    while(!stack.empty()) {
+        Cell *cell = stack.top();
+        cell->is_hidden = false;
+
+        stack.pop();
+        visited.insert(cell);
+
+
+        int i = (cell->DestR.y - UpperBound)/CellSize;
+        int j = (cell->DestR.x - LeftBound)/CellSize;
+
+        std::array<std::pair<int, int>, 8> cells_around 
+                {{ {i-1, j-1}, {i-1, j}, {i-1, j+1},
+                   {i, j-1},             {i, j+1},
+                   {i+1, j-1}, {i+1, j}, {i+1, j+1} }};
+        for(auto &coords: cells_around) {
+            int i_ind = std::get<0>(coords);
+            int j_ind = std::get<1>(coords);
+
+            if(!cell_exists(i_ind, j_ind)) continue;
+            auto &cell = field[i_ind][j_ind];
+            if(visited.find(&cell) == visited.end()) {
+                if(cell.bombs_around == 0) {
+                    stack.push(&cell);
+                } else if(!cell.is_bomb) {
+                    cell.is_hidden = false;
+                }
+            }
+        }
+    }
+}
+
+void GameOver(Board &board) {
+    for(auto &layer: board.field) {
+        for(auto &cell: layer) {
+            cell.is_clickable = false;
+            if(cell.is_bomb) {
+                cell.is_hidden = false;
+            }
+        }
+    }
 }
