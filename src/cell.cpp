@@ -1,7 +1,6 @@
 #include <SDL2/SDL_image.h>
 
 #include "cell.hpp"
-#include "globals.hpp"
 
 SDL_Rect make_SrcR(int posx, int posy) {
     SDL_Rect rect;
@@ -24,6 +23,16 @@ SDL_Texture *make_texture(SDL_Renderer *renderer, std::string &path) {
     return texture;
 }
 
+bool cell_exists(int i, int j) {
+    if(i < 0 || i > num_cells_on_height-1 ||
+       j < 0 || j > num_cells_on_length-1) {
+        return false;
+    }
+    return true;
+}
+
 Cell::Cell() {
     texture = nullptr;
+    default_texture = nullptr;
+    bombs_around = 0;
 }

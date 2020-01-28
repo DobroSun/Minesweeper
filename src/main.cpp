@@ -27,7 +27,7 @@ int main() {
     }
 
     CreateBoard(board, renderer);
-
+    ComputeCells(board, renderer);
 
     SDL_Event event;
     //exit(0);
@@ -35,7 +35,16 @@ int main() {
         for(auto &layer: board.field) {
             for(auto &cell: layer) {
                 SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
-                SDL_RenderCopy(renderer, cell.texture, NULL, &cell.DestR);
+                SDL_Texture *cell_texture;
+
+                if(cell.is_hidden) {
+                    cell_texture = cell.default_texture;
+                } else {
+                    cell_texture = cell.texture;
+                }
+
+
+                SDL_RenderCopy(renderer, cell_texture, NULL, &cell.DestR);
             }
         }
         SDL_RenderPresent(renderer);

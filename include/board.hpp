@@ -7,10 +7,8 @@
 #include <array>
 
 class Board;
-static std::array<std::string, 2> paths;
 void CreateBoard(Board &board, SDL_Renderer *renderer);
-
-int get_random(int stop);
+void ComputeCells(Board &board, SDL_Renderer *renderer);
 
 class Board {
 public:
