@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib.a  CMakeFiles/lib.dir/board.cpp.o CMakeFiles/lib.dir/cell.cpp.o CMakeFiles/lib.dir/utils.cpp.o
+/usr/bin/ranlib liblib.a

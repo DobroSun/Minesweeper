@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd build/
+sudo cmake .. > /dev/null
+sudo make > /dev/null
+exec ./main

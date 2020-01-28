@@ -1,0 +1,6 @@
+/minesweeper/build/CMakeFiles/rebuild_cache.dir
+/minesweeper/build/CMakeFiles/main.dir
+/minesweeper/build/CMakeFiles/edit_cache.dir
+/minesweeper/build/src/CMakeFiles/rebuild_cache.dir
+/minesweeper/build/src/CMakeFiles/lib.dir
+/minesweeper/build/src/CMakeFiles/edit_cache.dir
