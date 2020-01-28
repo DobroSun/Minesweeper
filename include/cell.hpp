@@ -19,8 +19,10 @@ public:
     bool is_bomb;
     bool is_hidden;
     bool is_clickable;
+    bool is_flagged;
     SDL_Texture *texture;
     SDL_Texture *default_texture;
+    SDL_Texture *flagged_texture;
     SDL_Rect SrcR;
     SDL_Rect DestR;
 };

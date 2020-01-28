@@ -36,7 +36,9 @@ int main() {
                 SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
                 SDL_Texture *cell_texture;
 
-                if(cell.is_hidden) {
+                if(cell.is_flagged) {
+                    cell_texture = cell.flagged_texture;
+                } else if(cell.is_hidden) {
                     cell_texture = cell.default_texture;
                 } else {
                     cell_texture = cell.texture;
@@ -63,17 +65,29 @@ int main() {
                             break;
                     }
                 case SDL_MOUSEBUTTONDOWN:
-                    Cell *cell = Get_Cell(board, event.motion.x, event.motion.y);
-                    if(!cell || !cell->is_clickable) break;
+                    if(event.button.button == SDL_BUTTON_LEFT) {
+                        Cell *cell = Get_Cell(board, event.motion.x, event.motion.y);
+                        if(!cell || !cell->is_clickable) break;
+                        if(cell->is_flagged) break;
 
-                    cell->is_hidden = false;
-                    if(cell->is_bomb) {
-                        GameOver(board);
+                        cell->is_hidden = false;
+                        if(cell->is_bomb) {
+                            GameOver(board);
+                            break;
+                        } else if(cell->bombs_around == 0) {
+                            OpenEmptyCells(board, cell);
+                        }
                         break;
-                    } else if(cell->bombs_around == 0) {
-                        OpenEmptyCells(board, cell);
+                    } else if(event.button.button == SDL_BUTTON_RIGHT) {
+                        Cell *cell = Get_Cell(board, event.motion.x, event.motion.y);
+                        if(!cell || !cell->is_clickable) break;
+
+                        if(!cell->is_flagged)
+                            cell->is_flagged = true;
+                        else
+                            cell->is_flagged = false;
                     }
-                    break;
+                    SDL_RenderClear(renderer);
             }
         }
     }

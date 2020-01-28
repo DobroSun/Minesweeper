@@ -34,11 +34,14 @@ bool cell_exists(int i, int j) {
 Cell::Cell() {
     texture = nullptr;
     default_texture = nullptr;
+    flagged_texture = nullptr;
     bombs_around = 0;
     is_clickable = true;
+    is_flagged = false;
 }
 
 Cell::~Cell() {
     SDL_DestroyTexture(texture);
     SDL_DestroyTexture(default_texture);
+    SDL_DestroyTexture(flagged_texture);
 }

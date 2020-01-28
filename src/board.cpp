@@ -5,7 +5,8 @@
 #include <unordered_set>
 
 
-std::string default_path = assets_path+"facingDown.png";
+std::string default_png_path = assets_path+"facingDown.png";
+std::string flagged_png_path = assets_path+"flagged.png";
 std::array<std::string, 2> image_cellbomb {{ assets_path+"factingDown.png", assets_path+"bomb.png" }};
 std::array<std::string, 9> image_numbers 
             {{ assets_path+"0.png",
@@ -28,7 +29,8 @@ void CreateBoard(Board &board, SDL_Renderer *renderer) {
             cell.is_bomb = random_num;
             cell.is_hidden = true;
 
-            cell.default_texture = make_texture(renderer, default_path);
+            cell.default_texture = make_texture(renderer, default_png_path);
+            cell.flagged_texture = make_texture(renderer, flagged_png_path);
             cell.texture = make_texture(renderer, path);
 
             cell.SrcR = make_SrcR(posx, posy); cell.DestR = make_DestR(posx, posy);
