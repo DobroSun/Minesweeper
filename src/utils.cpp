@@ -3,5 +3,5 @@
 #include <iostream>
 
 int get_random() {
-    return std::rand() % 2 && std::rand() % 2;
+    return (rand() % 100) < 20;
 }

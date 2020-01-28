@@ -13,6 +13,8 @@ bool cell_exists(int i, int j);
 class Cell {
 public:
     Cell();
+    ~Cell();
+    bool check_cursor(int x, int y);
 
     size_t bombs_around;
     bool is_bomb;

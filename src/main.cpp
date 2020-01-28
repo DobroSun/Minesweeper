@@ -30,7 +30,7 @@ int main() {
     ComputeCells(board, renderer);
 
     SDL_Event event;
-    //exit(0);
+
     while(is_running) {
         for(auto &layer: board.field) {
             for(auto &cell: layer) {
@@ -42,8 +42,6 @@ int main() {
                 } else {
                     cell_texture = cell.texture;
                 }
-
-
                 SDL_RenderCopy(renderer, cell_texture, NULL, &cell.DestR);
             }
         }
@@ -64,14 +62,19 @@ int main() {
                         default:
                             break;
                     }
-                default:
+                case SDL_MOUSEMOTION:
+                    std::cout << event.motion.x << " " << event.motion.y << std::endl;
+
+                    Cell *cell = Get_Cell(board, event.motion.x, event.motion.y);
+
+                    if(!cell) break;
+                    else std::cout << cell->DestR.x << " " << cell->DestR.y << "WORKING!!!" << std::endl;
+
                     break;
             }
         }
-        //SDL_RenderClear(renderer);
     }
 
-    //SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(win);
     SDL_Quit();

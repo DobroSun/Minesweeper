@@ -16,6 +16,7 @@ std::array<std::string, 9> image_numbers
 void CreateBoard(Board &board, SDL_Renderer *renderer) {
     int posx = LeftBound; int posy = UpperBound;
 
+    std::srand(time(NULL));
     for(auto &layer: board.field) {
         for(auto &cell: layer) {
             int random_num = get_random();
@@ -27,8 +28,7 @@ void CreateBoard(Board &board, SDL_Renderer *renderer) {
             cell.default_texture = make_texture(renderer, default_path);
             cell.texture = make_texture(renderer, path);
 
-            cell.SrcR = make_SrcR(posx, posy);
-            cell.DestR = make_DestR(posx, posy);
+            cell.SrcR = make_SrcR(posx, posy); cell.DestR = make_DestR(posx, posy);
             
             if(posx+CellSize < RightBound)
                 posx += CellSize;
@@ -62,6 +62,9 @@ void ComputeCells(Board &board, SDL_Renderer *renderer) {
                     cell.bombs_around += 1;
                 }
             }
+            if(!cell.bombs_around) {
+                continue;
+            }
 
             std::string path = image_numbers[cell.bombs_around];
             cell.texture = make_texture(renderer, path);
@@ -69,4 +72,44 @@ void ComputeCells(Board &board, SDL_Renderer *renderer) {
     }
 }
 
+Cell *Get_Cell(Board &board, double x, double y) {
+    if(x < LeftBound || x >= RightBound || y < UpperBound || y >= LowerBound) {
+        return nullptr;
+    }
+    auto &field = board.field;
+    
+    int left; int right; int middle;
+    left = 0; right = field[0].size() - 1;
 
+    int res1 = - 1;
+    while(left < right+1) {
+        middle = (left + right)/2;
+        if(field[0][middle].DestR.x < x) {
+            left = middle+1;
+        } else if(field[0][middle].DestR.x > x) {
+            right = middle-1;
+        } else {
+            res1 = middle;
+            break;
+        }
+    }
+    if(res1 == -1) res1 = left-1;
+
+    left = 0; right = field.size()-1;
+
+    int res2 = -1;
+    while(left < right+1) {
+        middle = (left + right)/2;
+        if(field[middle][res1].DestR.y < y) {
+            left = middle+1;
+        } else if(field[middle][res1].DestR.y > y) {
+            right = middle-1;
+        } else {
+            res2 = middle;
+            break;
+        }
+    }
+    if(res2 == -1) res2 = left-1;
+
+    return &field[res2][res1];
+}
