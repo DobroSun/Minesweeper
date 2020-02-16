@@ -2,5 +2,5 @@
 
 cd build/
 sudo cmake .. > /dev/null
-sudo make > /dev/null
+sudo make -j4 > /dev/null
 exec ./main

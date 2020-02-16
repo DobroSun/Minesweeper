@@ -17,13 +17,19 @@ int main() {
                                        WIDTH, HEIGHT, 0);
     if(!win) {
         std::cerr << "Couldn't create window: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return 1;
     }
 
     SDL_Surface *src = SDL_GetWindowSurface(win);
-    SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, 0);
+    SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
     if(!renderer) {
         std::cerr << "Couldn't create renderer: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(win);
+        SDL_Quit();
+        return 1;
     }
+
 
     CreateBoard(board, renderer);
     ComputeCells(board, renderer);
